@@ -1,6 +1,6 @@
 from django.db import models
 
-from colonialismdb import common
+from clio import common
 
 class BaseTradeDataEntry(common.models.BaseDataEntry):
   class Meta(common.models.BaseDataEntry.Meta):

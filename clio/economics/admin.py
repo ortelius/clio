@@ -1,6 +1,6 @@
-from colonialismdb.economics.models import AggregateTradeDataEntry, BilateralTradeDataEntry
-from colonialismdb.sources.models import Table
-from colonialismdb.common.admin import BaseSubmitAdmin, BaseMergeableCategoryAdmin, BaseMainDataEntryAdmin
+from clio.economics.models import AggregateTradeDataEntry, BilateralTradeDataEntry
+from clio.sources.models import Table
+from clio.common.admin import BaseSubmitAdmin, BaseMergeableCategoryAdmin, BaseMainDataEntryAdmin
 from django.contrib import admin
 
 class BaseTradeDataEntryAdmin(BaseMainDataEntryAdmin):

@@ -1,8 +1,8 @@
 from django.conf.urls.defaults import *
 
-urlpatterns = patterns('colonialismdb.population.views',
+urlpatterns = patterns('clio.population.views',
     # Example:
-    # (r'^colonialismdb/', include('colonialismdb.foo.urls')),
+    # (r'^clio/', include('clio.foo.urls')),
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:

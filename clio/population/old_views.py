@@ -8,7 +8,7 @@ import csv
 
 import forms, models
 
-from colonialismdb.common.utils import UnicodeWriter
+from clio.common.utils import UnicodeWriter
 
 def index(request):
   #return HttpResponseRedirect('query/')

@@ -1,4 +1,4 @@
-# Django settings for colonialismdb project.
+# Django settings for clio project.
 import os.path, sys, posixpath
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
@@ -51,9 +51,9 @@ POSTGIS_VERSION = (1, 5, 2)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'geo_bu_dev',                      # Or path to database file if using sqlite3.
-        'USER': 'mrtrosen',                      # Not used with sqlite3.
-        'PASSWORD': 'rat8me',                  # Not used with sqlite3.
+        'NAME': 'clio',                      # Or path to database file if using sqlite3.
+        'USER': 'clio_admin',                      # Not used with sqlite3.
+        'PASSWORD': '$3cr3t',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
@@ -90,7 +90,7 @@ MIDDLEWARE_CLASSES = (
     'reversion.middleware.RevisionMiddleware',
 )
 
-ROOT_URLCONF = 'colonialismdb.urls'
+ROOT_URLCONF = 'clio.urls'
 
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_ROOT, "templates"),
@@ -110,13 +110,13 @@ INSTALLED_APPS = (
 
     'reversion',
 
-    'colonialismdb.government',
-    'colonialismdb.education',
-    'colonialismdb.infrastructure',
-    'colonialismdb.population',
-    'colonialismdb.economics',
-    'colonialismdb.sources',
-    'colonialismdb.common',
+    'clio.government',
+    'clio.education',
+    'clio.infrastructure',
+    'clio.population',
+    'clio.economics',
+    'clio.sources',
+    'clio.common',
     'registration',
     'south',
 

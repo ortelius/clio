@@ -1,7 +1,7 @@
 from django.db import models
 
-from colonialismdb.common.models import Location, BaseDataEntry, Category, SpatialAreaUnit, Currency, LengthUnit, WeightUnit
-from colonialismdb.sources.models import BaseSourceObject 
+from clio.common.models import Location, BaseDataEntry, Category, SpatialAreaUnit, Currency, LengthUnit, WeightUnit
+from clio.sources.models import BaseSourceObject 
 
 class MotorVehicleType(Category):
   class Meta(Category.Meta):

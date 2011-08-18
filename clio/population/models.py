@@ -1,7 +1,7 @@
 from django.db import models
 
-from colonialismdb.common.models import Location, Religion, Race, Ethnicity, EthnicOrigin, BaseDataEntry, Category
-from colonialismdb.sources.models import BaseSourceObject 
+from clio.common.models import Location, Religion, Race, Ethnicity, EthnicOrigin, BaseDataEntry, Category
+from clio.sources.models import BaseSourceObject 
 
 class PopulationCondition(Category):
   class Meta(Category.Meta):

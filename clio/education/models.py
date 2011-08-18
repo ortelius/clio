@@ -1,7 +1,7 @@
 from django.db import models
 
-from colonialismdb.common.models import Location, BaseDataEntry, Category, SpatialAreaUnit, Currency
-from colonialismdb.sources.models import BaseSourceObject 
+from clio.common.models import Location, BaseDataEntry, Category, SpatialAreaUnit, Currency
+from clio.sources.models import BaseSourceObject 
 
 class EducationExpenditureType(Category):
   class Meta(Category.Meta):

@@ -19,7 +19,7 @@ databrowse.site.register(MainDataEntry)
 
 urlpatterns = patterns('',
     # Example:
-    # (r'^colonialismdb/', include('colonialismdb.foo.urls')),
+    # (r'^clio/', include('clio.foo.urls')),
 
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^about/$','common.views.about', name='about'),
@@ -34,7 +34,7 @@ urlpatterns = patterns('',
 
     #(r'^testing$','economics.views.testing'),
 
-    #(r'^population/', include('colonialismdb.population.urls')),
+    #(r'^population/', include('clio.population.urls')),
     # registration
     (r'^accounts/', include('registration.backends.default.urls')),
 
@@ -45,16 +45,16 @@ urlpatterns = patterns('',
     (r'^population/locationlookup/$', 'population.views.locationlookup'),
     (r'^infrastructure/locationlookup/$', 'infrastructure.views.locationlookup'),
 
-    (r'^test/(?P<from_applabel>[^/]+)/(?P<from_model>[^/]+)/((add)|(\d+))/autocomplete/(?P<to_applabel>[^/]+)/(?P<to_model>[^/]+)/$', 'colonialismdb.common.views.autocomplete'),
-    (r'^test/(?P<from_applabel>[^/]+)/(?P<from_model>[^/]+)/(?P<from_id>\d+)/get_label/(?P<to_applabel>[^/]+)/(?P<to_model>[^/]+)/$', 'colonialismdb.common.views.get_label'),
+    (r'^test/(?P<from_applabel>[^/]+)/(?P<from_model>[^/]+)/((add)|(\d+))/autocomplete/(?P<to_applabel>[^/]+)/(?P<to_model>[^/]+)/$', 'clio.common.views.autocomplete'),
+    (r'^test/(?P<from_applabel>[^/]+)/(?P<from_model>[^/]+)/(?P<from_id>\d+)/get_label/(?P<to_applabel>[^/]+)/(?P<to_model>[^/]+)/$', 'clio.common.views.get_label'),
 
-    (r'^admin/merge_selected/', 'colonialismdb.common.admin.merge_selected'),
-    (r'^admin/(?P<from_applabel>[^/]+)/(?P<from_model>[^/]+)/((add)|(\d+))/autocomplete/(?P<to_applabel>[^/]+)/(?P<to_model>[^/]+)/$', 'colonialismdb.common.views.autocomplete'),
-    (r'^admin/(?P<from_applabel>[^/]+)/(?P<from_model>[^/]+)/(?P<from_id>\d+)/get_label/(?P<to_applabel>[^/]+)/(?P<to_model>[^/]+)/$', 'colonialismdb.common.views.get_label'),
+    (r'^admin/merge_selected/', 'clio.common.admin.merge_selected'),
+    (r'^admin/(?P<from_applabel>[^/]+)/(?P<from_model>[^/]+)/((add)|(\d+))/autocomplete/(?P<to_applabel>[^/]+)/(?P<to_model>[^/]+)/$', 'clio.common.views.autocomplete'),
+    (r'^admin/(?P<from_applabel>[^/]+)/(?P<from_model>[^/]+)/(?P<from_id>\d+)/get_label/(?P<to_applabel>[^/]+)/(?P<to_model>[^/]+)/$', 'clio.common.views.get_label'),
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^admin/', include(admin.site.urls)),
 
-    (r'^static/sources/(?P<path>.+)\.(?P<ext>.+)', 'colonialismdb.sources.views.open_src_file'),
+    (r'^static/sources/(?P<path>.+)\.(?P<ext>.+)', 'clio.sources.views.open_src_file'),
 
     (r'^databrowse/(.*)', login_required(databrowse.site.root)),
 )

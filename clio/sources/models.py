@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from colonialismdb.common.models import BaseSubmitModel, Category, Language, Location, PoliticalUnit
+from clio.common.models import BaseSubmitModel, Category, Language, Location, PoliticalUnit
 
 class SourceType(Category):
   class Meta(Category.Meta):

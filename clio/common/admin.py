@@ -1,5 +1,5 @@
-from colonialismdb.common import models
-from colonialismdb.common import widgets
+from clio.common import models
+from clio.common import widgets
 
 from common.models import UserProfile
 

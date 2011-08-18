@@ -1,7 +1,7 @@
-from colonialismdb.infrastructure.models import MainDataEntry, MotorVehicleType, PostalItemType, MerchantShipType
-from colonialismdb.common.models import SpatialAreaUnit, Currency
-from colonialismdb.sources.models import Table
-from colonialismdb.common.admin import BaseSubmitAdmin, BaseMergeableCategoryAdmin, BaseMainDataEntryAdmin
+from clio.infrastructure.models import MainDataEntry, MotorVehicleType, PostalItemType, MerchantShipType
+from clio.common.models import SpatialAreaUnit, Currency
+from clio.sources.models import Table
+from clio.common.admin import BaseSubmitAdmin, BaseMergeableCategoryAdmin, BaseMainDataEntryAdmin
 from django.contrib import admin
 
 class MainDataEntryAdmin(BaseMainDataEntryAdmin) :

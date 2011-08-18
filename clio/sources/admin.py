@@ -1,6 +1,6 @@
-from colonialismdb.sources.models import BaseSourceObject, Source, Table, SourceType, SourceSubject, DigitizationPriority, SourceFile
-from colonialismdb.common.admin import BaseSubmitStackedInline, BaseSubmitTabularInline, BaseSubmitAdmin, BaseMergeableCategoryAdmin
-from colonialismdb import population
+from clio.sources.models import BaseSourceObject, Source, Table, SourceType, SourceSubject, DigitizationPriority, SourceFile
+from clio.common.admin import BaseSubmitStackedInline, BaseSubmitTabularInline, BaseSubmitAdmin, BaseMergeableCategoryAdmin
+from clio import population
 from django.contrib import admin
 
 class TableInline(BaseSubmitTabularInline):

@@ -1,6 +1,6 @@
-from colonialismdb.population.models import MainDataEntry, PopulationCondition, Occupation
-from colonialismdb.sources.models import Table
-from colonialismdb.common.admin import BaseSubmitAdmin, BaseMergeableCategoryAdmin, BaseMainDataEntryAdmin
+from clio.population.models import MainDataEntry, PopulationCondition, Occupation
+from clio.sources.models import Table
+from clio.common.admin import BaseSubmitAdmin, BaseMergeableCategoryAdmin, BaseMainDataEntryAdmin
 from django.contrib import admin
 
 class MainDataEntryAdmin(BaseMainDataEntryAdmin) :
