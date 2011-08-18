@@ -8,9 +8,9 @@ import functools
 
 import migtools
 
-from colonialismdb.population.models import MainDataEntry
-from colonialismdb.common.models import Location
-from colonialismdb.sources.models import Source, Table
+from clio.population.models import MainDataEntry
+from clio.common.models import Location
+from clio.sources.models import Source, Table
 
 from django.db.utils import DatabaseError
 from django.core.exceptions import ValidationError

@@ -5,7 +5,7 @@ import sys
 
 from django.contrib.auth.models import User
 
-from colonialismdb.common.models import PoliticalUnit, Location
+from clio.common.models import PoliticalUnit, Location
 
 coder_names = ("ahmedn", "chelsea", "mahsa", "nathalie", "tavish", )
 

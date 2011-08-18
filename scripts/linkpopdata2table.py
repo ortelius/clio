@@ -3,8 +3,8 @@
 import re
 import sys
 
-from colonialismdb.population.models import MainDataEntry
-from colonialismdb.sources.models import Table
+from clio.population.models import MainDataEntry
+from clio.sources.models import Table
 
 num_err_rows = 0
 num_wrn_rows = 0

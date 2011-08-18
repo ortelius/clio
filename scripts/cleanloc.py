@@ -3,8 +3,8 @@
 from django.db import transaction
 from django.contrib.auth.models import User
 
-from colonialismdb.common.models import PoliticalUnit, Location
-from colonialismdb.common.admin import merge
+from clio.common.models import PoliticalUnit, Location
+from clio.common.admin import merge
 
 mig_user = User.objects.get(username = 'karim')
 

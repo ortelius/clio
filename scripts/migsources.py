@@ -9,8 +9,8 @@ import functools
 
 import migtools
 
-from colonialismdb.sources.models import SourceType, SourceSubject, DigitizationPriority, Source
-from colonialismdb.common.models import Language
+from clio.sources.models import SourceType, SourceSubject, DigitizationPriority, Source
+from clio.common.models import Language
 
 from django.db.utils import DatabaseError
 from django.core.exceptions import ValidationError

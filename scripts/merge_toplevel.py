@@ -6,8 +6,8 @@ from django.db import transaction
 from django.db.models import Q
 from django.contrib.auth.models import User
 
-from colonialismdb.common.models import PoliticalUnit, Location
-from colonialismdb.common.admin import merge
+from clio.common.models import PoliticalUnit, Location
+from clio.common.admin import merge
 
 if __name__ == "__main__":
   if len(sys.argv) > 1:

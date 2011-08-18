@@ -4,12 +4,12 @@ import sys
 import codecs
 import cStringIO
 
-from colonialismdb.common.models import Location, Category
+from clio.common.models import Location, Category
 
 from django.core.files import File
 from django.contrib.auth.models import User
 from django.db.models import Q
-import colonialismdb
+import clio
 
 DEBUG = False
 
@@ -130,7 +130,7 @@ def add_source_files(source_file_path, src_obj, submitted_by = mig_user):
   if os.path.isfile(source_file_path):
     source_file = File(open(source_file_path, 'rb'))
     try:
-      src_file = colonialismdb.sources.models.SourceFile(source_file = source_file, for_source = src_obj, active = True, submitted_by = submitted_by)
+      src_file = clio.sources.models.SourceFile(source_file = source_file, for_source = src_obj, active = True, submitted_by = submitted_by)
       src_file.save()
     finally:
       source_file.close()

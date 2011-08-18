@@ -8,9 +8,9 @@ import functools
 
 import migtools
 
-from colonialismdb.economics.models import AggregateTradeDataEntry
-from colonialismdb.common.models import Location, Currency
-from colonialismdb.sources.models import Source, Table
+from clio.economics.models import AggregateTradeDataEntry
+from clio.common.models import Location, Currency
+from clio.sources.models import Source, Table
 
 from django.db.utils import DatabaseError
 from django.core.exceptions import ValidationError

@@ -8,9 +8,9 @@ import functools
 
 import migtools
 
-from colonialismdb.infrastructure.models import MainDataEntry, MotorVehicleType
-from colonialismdb.common.models import Location, LengthUnit, WeightUnit
-from colonialismdb.sources.models import Source, Table
+from clio.infrastructure.models import MainDataEntry, MotorVehicleType
+from clio.common.models import Location, LengthUnit, WeightUnit
+from clio.sources.models import Source, Table
 
 from django.db.utils import DatabaseError
 from django.core.exceptions import ValidationError

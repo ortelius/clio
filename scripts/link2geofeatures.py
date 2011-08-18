@@ -11,7 +11,7 @@ import migtools
 
 from django.contrib.auth.models import User
 
-from colonialismdb.common.models import BaseGeo, Location, TemporalLocation
+from clio.common.models import BaseGeo, Location, TemporalLocation
 
 mig_user = User.objects.get(username = 'karim')
 

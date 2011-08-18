@@ -4,7 +4,7 @@ import migtools
 
 from django.db.models import Q
 
-from colonialismdb.economics.models import BilateralTradeDataEntry
+from clio.economics.models import BilateralTradeDataEntry
 
 if __name__ == "__main__":
   for bidata in BilateralTradeDataEntry.objects.filter(Q(exports = -9) | Q(imports = -9), Q(source = 3393)):

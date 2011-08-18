@@ -2,7 +2,7 @@
 
 import os, sys
 from django.contrib.gis.utils import LayerMapping
-from colonialismdb.common.models import BaseGeo, GeoPoint, GeoPolygon, geopoint_mapping, geopolygon_mapping
+from clio.common.models import BaseGeo, GeoPoint, GeoPolygon, geopoint_mapping, geopolygon_mapping
 
 
 def run(colgeo_shp_pt, colgeo_shp_py, verbose=True):

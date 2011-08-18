@@ -6,9 +6,9 @@ from django.db import transaction
 from django.db.models import Q
 from django.contrib.auth.models import User
 
-from colonialismdb.common.models import PoliticalUnit, Location
-from colonialismdb.sources.models import BaseSourceObject
-from colonialismdb.population.models import MainDataEntry as PopDataEntry
+from clio.common.models import PoliticalUnit, Location
+from clio.sources.models import BaseSourceObject
+from clio.population.models import MainDataEntry as PopDataEntry
 
 def print_data_sources(loc_pks, print_loc_name = True, indent = 0):
     for loc_pk in loc_pks:

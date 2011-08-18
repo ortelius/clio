@@ -10,7 +10,7 @@ from django.db import transaction
 from django.db.models import Q
 from django.contrib.auth.models import User
 
-from colonialismdb.common.models import PoliticalUnit, Location
+from clio.common.models import PoliticalUnit, Location
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser()

@@ -8,9 +8,9 @@ import functools
 
 import migtools
 
-from colonialismdb.population.models import MainDataEntry, PopulationCondition
-from colonialismdb.common.models import Location, Religion, Ethnicity, EthnicOrigin, Race
-from colonialismdb.sources.models import Source, Table
+from clio.population.models import MainDataEntry, PopulationCondition
+from clio.common.models import Location, Religion, Ethnicity, EthnicOrigin, Race
+from clio.sources.models import Source, Table
 from django.db.utils import DatabaseError
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User

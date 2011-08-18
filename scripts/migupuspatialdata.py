@@ -8,9 +8,9 @@ import functools
 
 import migtools
 
-from colonialismdb.government.models import MainDataEntry
-from colonialismdb.common.models import Location, SpatialAreaUnit
-from colonialismdb.sources.models import Source, Table
+from clio.government.models import MainDataEntry
+from clio.common.models import Location, SpatialAreaUnit
+from clio.sources.models import Source, Table
 
 from django.db.utils import DatabaseError
 from django.core.exceptions import ValidationError

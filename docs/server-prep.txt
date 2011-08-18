@@ -19,5 +19,5 @@ For deployment the documentation available on Django's website should be followe
     i) gdal_fw.dll does not seem to work
     ii) Installed GeoDjango in *addition* to FW to get the correct GDAL libraries
     iii) Just make sure GeoDjango/bin is on the path but remove the part about postgresql 8.3
-  d. Run postgis.sql and spatial_refs_sys.sql on colonialismdb database
+  d. Run postgis.sql and spatial_refs_sys.sql on clio database
   e. Grant database permissions per create_template_postgis-1.5.sh

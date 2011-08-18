@@ -2,7 +2,7 @@
 
 import sys
 
-from colonialismdb.common.models import Location
+from clio.common.models import Location
 
 if __name__ == "__main__":
   if len(sys.argv) > 2:

@@ -8,9 +8,9 @@ import functools
 
 import migtools
 
-from colonialismdb.government.models import SpatialAreaUnit, Currency, RevenueType, ExpenditureType, MoneySupplyType, MilitaryType, OfficialsType, MainDataEntry, PublicDebtType
-from colonialismdb.common.models import Location, Religion, Ethnicity, EthnicOrigin, Race
-from colonialismdb.sources.models import Source, Table
+from clio.government.models import SpatialAreaUnit, Currency, RevenueType, ExpenditureType, MoneySupplyType, MilitaryType, OfficialsType, MainDataEntry, PublicDebtType
+from clio.common.models import Location, Religion, Ethnicity, EthnicOrigin, Race
+from clio.sources.models import Source, Table
 from django.db.utils import DatabaseError
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User

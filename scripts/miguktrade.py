@@ -11,9 +11,9 @@ import migtools
 
 from django.contrib.auth.models import User
 
-from colonialismdb.common.models import PoliticalUnit, Location
-from colonialismdb.sources.models import Source
-from colonialismdb.economics.models import BilateralTradeDataEntry
+from clio.common.models import PoliticalUnit, Location
+from clio.sources.models import Source
+from clio.economics.models import BilateralTradeDataEntry
 
 mig_user = User.objects.get(username = 'datamiguser')
 src = None 
