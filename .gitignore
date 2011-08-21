@@ -7,3 +7,8 @@ local_settings.py
 *.log
 log.err
 migrations/
+.Python
+bin/
+include/
+lib/
+clio/logs/
