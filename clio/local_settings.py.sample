@@ -2,6 +2,8 @@ from prod_settings import *
 
 DEBUG = True
 
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+
 # TODO Put your database settings here
 DATABASES = {
 	'default' : {
@@ -29,14 +31,14 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    'C:/clio/Colonialism-Database/clio/templates'
+    os.path.join(PROJECT_ROOT, "templates")
 )
 
 MEDIA_ROOT = 'e:/clio_sources'
 
-MEDIA_URL = 'http://peanut.bu.edu/static/'
+MEDIA_URL = '/static/'
 
-STATIC_ROOT = 'c:/clio/Colonialism-Database/clio/static'
+STATIC_ROOT = os.path.join(PROJECT_ROOT, "static")
 
 # These were needed for Windows
 #GEOS_LIBRARY_PATH="c:/Program Files (x86)/PostgreSQL/8.4/bin/libgeos_c-1.dll"
