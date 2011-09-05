@@ -57,7 +57,6 @@ def popsearch(request):
         else:
             results = MainDataEntry.objects.select_related().order_by('id')
 
-
         # **** Not Yet Implemented in the Form ****
         """
         # ---- Source Filter ----
@@ -96,7 +95,10 @@ def popsearch(request):
         location_results = []
         search_locations = None
         # TODO: Handle for locations *selected* in the form vs ones typed in the search box
-        if request.GET.get('locations'):
+        locations = request.GET.get('locations')
+        if locations == 'None':
+            locations = None
+        if locations:
             search_locations = request.GET.get('locations')
             locations_list = search_locations.split(",")
             for loc in locations_list:
@@ -134,24 +136,24 @@ def popsearch(request):
         form = MainPopulationQueryForm() 
         results = []
         locations_list = []
-        searchlocations = ""
-        startdate = ""
-        enddate = ""
-        sourceinput = ""
+        search_locations = ""
+        start_date = ""
+        end_date = ""
+        source_input = ""
         search = ""
         genders = ""
-        minage =""
-        maxage = ""
+        min_age =""
+        max_age = ""
     return render_to_response("population.html",
         {
             "locations_list":locations_list,
-            "searchlocations":searchlocations,
-            "startdate":startdate,
-            "enddate":enddate,
-            "sourceinput":sourceinput,
+            "searchlocations":search_locations,
+            "startdate":start_date,
+            "enddate":end_date,
+            "sourceinput":source_input,
             "genders":genders,
-            "minage":minage,
-            "maxage":maxage,
+            "minage":min_age,
+            "maxage":max_age,
             "results":results,
             "search":search,
             "form": form,

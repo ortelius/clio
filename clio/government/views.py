@@ -68,7 +68,10 @@ def govtsearch(request):
         location_results = []
         search_locations = None
         # TODO: Handle for locations *selected* in the form vs ones typed in the search box
-        if request.GET.get('locations'):
+        locations = request.GET.get('locations')
+        if locations == 'None':
+            locations = None
+        if locations:
             search_locations = request.GET.get('locations')
             locations_list = search_locations.split(",")
             for loc in locations_list:
