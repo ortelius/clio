@@ -1,5 +1,5 @@
 from django.shortcuts import render_to_response
-from population.models import *
+from population.models import PopulationCondition, Occupation, MainDataEntry 
 from django.db.models import Q
 from django.contrib import auth
 from django.http import *
@@ -40,19 +40,39 @@ def popsearch(request):
         form = GovernmentSearchForm(request.GET)
         search = request.GET.get('search')
 
+        # ---- Date Filter ----
+        start_date = request.GET.get('start_date') 
+        end_date = request.GET.get('end_date')
+        if start_date == 'None':
+            start_date = None
+        if end_date == 'None':
+            end_date = None
 
-        startdate = ''
-        enddate = ''
-
-        if 'all_time_frames' not in request.GET:
-            startdate = "%s-%s-%s" % (request.GET.get('start_date_year'),
+        if 'all_time_frames' not in request.GET and 'page' not in request.GET:
+            start_date = "%s-%s-%s" % (request.GET.get('start_date_year'),
                                       request.GET.get('start_date_month'),
                                       request.GET.get('start_date_day'))
-            enddate = "%s-%s-%s" % (request.GET.get('end_date_year'),
+            end_date = "%s-%s-%s" % (request.GET.get('end_date_year'),
                                       request.GET.get('end_date_month'),
                                       request.GET.get('end_date_day'))
+        if start_date and end_date:
+            datefilter = Q(begin_date__range=(start_date,end_date)) | Q(end_date__range=(start_date,end_date))
+            results = MainDataEntry.objects.filter(datefilter).select_related().order_by('id')
+        else:
+            results = MainDataEntry.objects.select_related().order_by('id')
 
 
+        # **** Not Yet Implemented in the Form ****
+        """
+        # ---- Source Filter ----
+        if request.GET.get('source_type'):
+            source_input = request.GET.get('source_type')
+            source_filter = Q(source__name__icontains=source_input)
+            results = results.filter(source_filter)
+        else:
+            source_input = None 
+        
+        # ---- Age Filter ----
         if request.GET.get('minage'):
             minage = request.GET.get('minage')
         else:
@@ -61,6 +81,9 @@ def popsearch(request):
             maxage = request.GET.get('maxage')
         else:
             maxage = 100
+        agefilter = Q(age_start__isnull=False) & Q(age_end__isnull=False) & Q(age_start__gte=minage) & Q(age_end__lte=maxage)
+        
+        # ---- Gender Filter ----
         if request.GET.get('genders'):
             if request.GET.get('genders') == 'e':
                 genders = "e"
@@ -70,36 +93,24 @@ def popsearch(request):
                 genderfilter = Q(population_gender=genders)
         else:
             genders = ""
-        if request.GET.get('enddate'):
-            enddate = request.GET.get('enddate')
-        else:
-            enddate = "2006-12-31"
-        if request.GET.get('sourceinput'):
-            sourceinput = request.GET.get('sourceinput')
-        else:
-            sourceinput = ""
+        """       
+
+        # ---- Location Filter ----
         locations_list = []
-        results = []
-
-        datefilter = Q(begin_date__range=(startdate,enddate)) | Q(end_date__range=(startdate,enddate))
-        sourcefilter = Q(source__name__icontains=sourceinput)
-        agefilter = Q(age_start__isnull=False) & Q(age_end__isnull=False) & Q(age_start__gte=minage) & Q(age_end__lte=maxage)
-        if startdate:
-            datesourceresults = MainDataEntry.objects.filter(datefilter).filter(sourcefilter).filter(agefilter).select_related().order_by('id')
-        else:
-            datesourceresults = MainDataEntry.objects.filter(sourcefilter).filter(agefilter).select_related().order_by('id')
-
+        location_results = []
+        search_locations = None
+        # TODO: Does not handle for locations *selected* in the form vs ones typed in the search box
         if request.GET.get('locations'):
-            searchlocations = request.GET.get('locations')
-            locations_list = searchlocations.split(", ")
+            search_locations = request.GET.get('locations')
+            locations_list = search_locations.split(", ")
+            # Need to look up by the locations ID, rather than string matching
             for x in locations_list:
-                for y in datesourceresults.filter(location__name="%s"%x).select_related().order_by('id'):
-                    results.append(y)
-        else:
-            searchlocations=""
-            results = datesourceresults
-            
-        paginator = Paginator(results,20)
+                for y in results.filter(location__name="%s"%x).select_related().order_by('id'):
+                    location_results.append(y)
+            results = location_results
+
+        # Setup the Paginator 
+        paginator = Paginator(results,50)
         try:
             page = request.GET.get('page','1')
         except ValueError:
@@ -112,10 +123,10 @@ def popsearch(request):
         return render_to_response("population_search_results.html",
             {
                 "locations_list":locations_list,
-                "searchlocations":searchlocations,
-                "startdate":startdate,
-                "enddate":enddate,
-                "sourceinput":sourceinput,
+                "search_locations":search_locations,
+                "start_date":start_date,
+                "end_date":end_date,
+                #"source_input":source_input,
                 "results":results,
                 "search":search,
                 "form": form,
@@ -147,94 +158,3 @@ def popsearch(request):
             "search":search,
             "form": form,
         },context_instance=RequestContext(request))
-
-
-
-
-"""
-    locations_list = []
-    #for x in MainDataEntry.objects.select_related():
-    #    clocation = smart_unicode(x.location.location.name,encoding='utf-8',errors='ignore')
-    #    if not  clocation in locations_list:
-    #        #locations_list.append(smart_str(x.location.location.name))
-    #        locations_list.append(clocation)
-    if request.GET.get('datesearch'):
-        datesearch = request.GET.get('datesearch')
-        startdate = request.GET.get('startdate')
-        enddate = request.GET.get('enddate')
-        qset = (Q(begin_date__range=(startdate,enddate)) | Q(end_date__range=(startdate,enddate)))
-        dateresults = MainDataEntry.objects.filter(qset).select_related().order_by('id')
-        paginator = Paginator(dateresults,1)
-        try:
-            page = int(request.GET.get('page',1))
-        except ValueError:
-            page = 1
-        try:
-            dateresults = paginator.page(page)
-        except (EmptyPage, InvalidPage):
-            dateresults = paginator.page(paginator.num_pages)
-    else:
-        datesearch = ""
-        startdate = ""
-        enddate = ""
-        dateresults = []
-    if request.GET.get('locationsearch'):
-        locationsearch = request.GET.get('locationsearch')
-        searchlocations = request.GET.get("locations")
-        if searchlocations:
-            loclist = searchlocations.split(", ")
-            qs = ""
-            locresults = []
-            for x in loclist:
-                locresults += MainDataEntry.objects.filter(Q(location__name="%s" % x)).select_related().order_by('id')
-            paginator = Paginator(locresults,1)
-            try:
-                page = request.GET.get('page','1')
-            except ValueError:
-                page = '1'
-            try:
-                locresults = paginator.page(page)
-            except (EmptyPage, InvalidPage):
-                locresults = paginator.page(paginator.num_pages)
-    else:
-        searchlocations = ""
-        locationsearch = ""
-        locresults = []
-    if request.GET.get('sourcesearch'):
-        sourcesearch = request.GET.get('sourcesearch')
-        sourceinput = request.GET.get('sourceinput')
-        sourceresults = MainDataEntry.objects.select_related().filter(Q(source__name__icontains=sourceinput)).order_by('id')
-        paginator = Paginator(sourceresults,1)
-        try:
-            page = request.GET.get('page','1')
-        except ValueError:
-            page = '1'
-        try:
-            sourceresults = paginator.page(page)
-        except (EmptyPage, InvalidPage):
-            sourceresults = paginator.page(paginator.num_pages)
-    else:
-        sourcesearch = ""
-        sourceinput = ""
-        sourceresults = []
-    if request.GET.get('agegendersearch'):
-        genders = request.GET.get('gender')
-        if request.GET.get('minage'):
-            minage = int(request.GET.get('minage'))
-        else:
-            minage = 0
-        if request.GET.get('maxage'):
-            maxage = int(request.GET.get('maxage'))
-        else:
-            maxage = 100
-        agegenderresults = MainDataEntry.objects.select_related().filter(Q(population_gender=genders) & Q(age_start__isnull=False) & Q(age_end__isnull=False) & Q(age_start__gte=minage) & Q(age_end__lte=maxage)).order_by('id')
-        #for x in Source.objects.select_related()[:1]:
-
-    else:
-        genders = []
-        agegenderresults = []
-        minage = ''
-        maxage = ''
-    
-    return render_to_response("population.html",{"locations_list":locations_list,"searchlocations":searchlocations,"locresults":locresults,"locationsearch":locationsearch,"datesearch":datesearch,"startdate":startdate,"enddate":enddate,"dateresults":dateresults,"sourcesearch":sourcesearch,"sourceinput":sourceinput,"sourceresults":sourceresults,"genders":genders,"agegenderresults":agegenderresults,"minage":minage,"maxage":maxage})
-"""

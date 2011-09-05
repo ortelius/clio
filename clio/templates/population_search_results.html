@@ -1,10 +1,17 @@
-<html>
-<head>
-</head>
-<body>
-<h1>Population Search Results</h1>
-<p><a href="{% url population %}">Back to Search</a></p>
+{% extends 'base.html' %}
 
+{% block feature %}
+<div id="feature" style='height:50px;'>
+    <div id="feature-content">
+        <h2>Population Search Results</h2>
+        <p><font size='-1'><a href="{% url population %}">Back to Search</a></font></p>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block extra-content %}
+<div id='extra-content'>
 <table style="border: solid 1px #DDD;">
     <tr style="border: solid 1px #DDD;">
         <td nowwrap style="border: solid 1px #DDD;">ID</td>
@@ -29,19 +36,19 @@
 </div>
 <div class="pagination">
     <span class="step-links">
-        <span><a href="?search={{ search }}&page=1&startdate={{ startdate }}&enddate={{ enddate }}&locations={{ searchlocations }}&sourceinput={{ sourceinput }}">first&nbsp;&nbsp;</a></span>
+        <span><a href="?search={{ search }}&page=1&start_date={{ start_date }}&end_date={{ end_date }}&locations={{ search_locations }}&source_input={{ source_input }}">first&nbsp;&nbsp;</a></span>
         {% if results.has_previous %}
-            <a href="?search={{ search }}&page={{ results.previous_page_number }}&startdate={{ startdate }}&enddate={{ enddate }}&locations={{ searchlocations }}&sourceinput={{ sourceinput }}"><span class="pagination-text-right">previous</span></a>
+            <a href="?search={{ search }}&page={{ results.previous_page_number }}&start_date={{ start_date }}&end_date={{ end_date }}&locations={{ search_locations }}&source_input={{ source_input }}"><span class="pagination-text-right">previous</span></a>
         {% endif %}
     <span class="current">
             Page {{ results.number }} of {{ results.paginator.num_pages }}.
     </span>
         {% if results.has_next %}
-                <a href="?search={{ search }}&page={{ results.next_page_number }}&startdate={{ startdate }}&enddate={{ enddate }}&locations={{ searchlocations }}&sourceinput={{ sourceinput }}"><span class="pagination-text-left">next</span></a>
+                <a href="?search={{ search }}&page={{ results.next_page_number }}&start_date={{ start_date }}&end_date={{ end_date }}&locations={{ search_locations }}&source_input={{ source_input }}"><span class="pagination-text-left">next</span></a>
         {% endif %}
-        <span><a href="?search={{ search }}&page={{ results.paginator.num_pages }}&startdate={{ startdate }}&enddate={{ enddate }}&locations={{ searchlocations }}&sourceinput={{ sourceinput }}">&nbsp;&nbsp;last</a></span>
+        <span><a href="?search={{ search }}&page={{ results.paginator.num_pages }}&start_date={{ start_date }}&end_date={{ end_date }}&locations={{ search_locations }}&source_input={{ source_input }}">&nbsp;&nbsp;last</a></span>
     </span>
     There are a total of {{ paginator.count }} records matching your query.
 </div>
-</body>
-</html>
+</div>
+{% endblock %}
