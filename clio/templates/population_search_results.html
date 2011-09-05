@@ -1,47 +1,71 @@
-<html>
-<head>
-</head>
-<body>
-<h1>Population Search Results</h1>
-<p><a href="{% url population %}">Back to Search</a></p>
+{% extends 'base.html' %}
 
-<table style="border: solid 1px #DDD;">
+{% block feature %}
+<div id="feature" style='height:60px;'>
+    <div id="feature-content">
+        <h2>Population Search Results</h2>
+        <p><font size='-1'><a href="{% url population %}">Back to Search</a></font></p>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block extra-content %}
+<div id='extra-content'>
+{% if results.object_list %}
+<table style="border: solid 1px #DDD;" width='100%'>
     <tr style="border: solid 1px #DDD;">
         <td nowwrap style="border: solid 1px #DDD;">ID</td>
         <td nowwrap style="border: solid 1px #DDD;">Source</td>
         <td nowwrap style="border: solid 1px #DDD;">Begin Date</td>
         <td nowwrap style="border: solid 1px #DDD;">End Date</td>
         <td nowwrap style="border: solid 1px #DDD;">Location</td>
+        <td nowwrap style="border: solid 1px #DDD;">Age</td>
+        <td nowwrap style="border: solid 1px #DDD;">Type</td>
+        <td nowwrap style="border: solid 1px #DDD;">Value</td>
         <td nowwrap style="border: solid 1px #DDD;">Value Units</td>
     </tr>
 {% for data in results.object_list %}
     <tr style="border: solid 1px #DDD;">
         <td style="border: solid 1px #DDD;">{{ data.id }}</td>
-        <td style="border: solid 1px #DDD;"><a href="../sourceinfo?source='{{ data.source }}'">{{ data.source }}</a></td>
+        <td style="border: solid 1px #DDD;"><a href="/sourceinfo?source={{ data.source.id }}">{{ data.source }}</a></td>
         <td style="border: solid 1px #DDD;">{{ data.begin_date }}</td>
         <td style="border: solid 1px #DDD;">{{ data.end_date }}</td>
         <td style="border: solid 1px #DDD;">{{ data.location }}</td>
+        {% if data_age_start %}
+        <td style="border: solid 1px #DDD;">{{ data.age_start }}-{{ data.age_end }}</td>
+        {% else %}
+        <td style="border: solid 1px #DDD;">&nbsp;</td>
+        {% endif %}
+        <td style="border: solid 1px #DDD;">{{ data.get_individ_fam_display }}</td>
+        <td style="border: solid 1px #DDD;">{{ data.population_value }}</td>
         <td style="border: solid 1px #DDD;">{{ data.value_unit }}</td>
     </tr>
 {% endfor %}
 </table>
-<br />
-</div>
+<br/><br/>
 <div class="pagination">
     <span class="step-links">
-        <span><a href="?search={{ search }}&page=1&startdate={{ startdate }}&enddate={{ enddate }}&locations={{ searchlocations }}&sourceinput={{ sourceinput }}">first&nbsp;&nbsp;</a></span>
+        <span><a href="?search={{ search }}&page=1&start_date={{ start_date }}&end_date={{ end_date }}&locations={{ search_locations }}&source_input={{ source_input }}">first&nbsp;&nbsp;</a></span>
         {% if results.has_previous %}
-            <a href="?search={{ search }}&page={{ results.previous_page_number }}&startdate={{ startdate }}&enddate={{ enddate }}&locations={{ searchlocations }}&sourceinput={{ sourceinput }}"><span class="pagination-text-right">previous</span></a>
+            <a href="?search={{ search }}&page={{ results.previous_page_number }}&start_date={{ start_date }}&end_date={{ end_date }}&locations={{ search_locations }}&source_input={{ source_input }}"><span class="pagination-text-right">previous</span></a>
         {% endif %}
     <span class="current">
             Page {{ results.number }} of {{ results.paginator.num_pages }}.
     </span>
         {% if results.has_next %}
-                <a href="?search={{ search }}&page={{ results.next_page_number }}&startdate={{ startdate }}&enddate={{ enddate }}&locations={{ searchlocations }}&sourceinput={{ sourceinput }}"><span class="pagination-text-left">next</span></a>
+                <a href="?search={{ search }}&page={{ results.next_page_number }}&start_date={{ start_date }}&end_date={{ end_date }}&locations={{ search_locations }}&source_input={{ source_input }}"><span class="pagination-text-left">next</span></a>
         {% endif %}
-        <span><a href="?search={{ search }}&page={{ results.paginator.num_pages }}&startdate={{ startdate }}&enddate={{ enddate }}&locations={{ searchlocations }}&sourceinput={{ sourceinput }}">&nbsp;&nbsp;last</a></span>
+        <span><a href="?search={{ search }}&page={{ results.paginator.num_pages }}&start_date={{ start_date }}&end_date={{ end_date }}&locations={{ search_locations }}&source_input={{ source_input }}">&nbsp;&nbsp;last</a></span>
     </span>
     There are a total of {{ paginator.count }} records matching your query.
 </div>
-</body>
-</html>
+<br/><br/>
+
+{% else %}
+<br/><br/>
+<center><h2>No results matched the specified query parameters</h2></center>
+<br/><br/>
+{% endif %}
+</div>
+{% endblock %}

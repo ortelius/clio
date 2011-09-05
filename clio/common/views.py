@@ -60,6 +60,7 @@ def search(request):
             else:
                 results = datesourceresults
 
+            paginator = Paginator(results, 10)
             return render_to_response("general_search_results.html",
                 {
                     "locations_list":locations_list,

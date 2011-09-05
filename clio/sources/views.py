@@ -4,6 +4,7 @@ from django.conf import settings
 from sources.models import *
 from django.db.models import Q
 from django.shortcuts import render_to_response
+from django.template import RequestContext
 
 def open_src_file(request, path, ext):
   file_path = '%s/sources/%s.%s' % (settings.STATIC_ROOT, path, ext)
@@ -13,12 +14,9 @@ def open_src_file(request, path, ext):
   #else:
 
 def sourceinfo(request):
-	source = str(request.GET.get('source').replace("%20"," ").replace("'",""))
-	s1 = source.split(" (")
-	results = []
+	source = request.GET.get('source')
 
-	for x in Source.objects.select_related().filter(name__icontains=s1[0]):
-		if cmp(str(x.source),source) == 0:
-			results.append(x)
+	s = BaseSourceObject.objects.get(pk=int(source))
 
-	return render_to_response("sourceinfo.html",{"results":results,"title":source})
+	return render_to_response("sourceinfo.html",{"source":s},
+        context_instance=RequestContext(request))

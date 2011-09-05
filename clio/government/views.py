@@ -1,20 +1,17 @@
+import csv
+
 from django.shortcuts import render_to_response
-from government.models import *
 from django.db.models import Q
 from django.http import *
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
-
-# Imports for the Ajax calls and the Jquery autocomplete plugin
 from django.http import HttpResponse
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.utils import simplejson
+from django.utils.encoding import smart_str, smart_unicode
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 
-# Imports to aid in unicode string handling
-from django.utils.encoding import smart_str, smart_unicode
-
+from government.models import *
 from government.forms import GovernmentSearchForm
-import csv
 
 # Ajax call from template picks up matching locations with this function
 def locationlookup(request):
@@ -34,47 +31,55 @@ def locationlookup(request):
 def govtsearch(request):
 
     if request.GET.get('search'):
-        print request.GET
-        print request.GET.getlist('empire')
         form = GovernmentSearchForm(request.GET)
         search = request.GET.get('search')
 
-        startdate = ''
-        enddate = ''
+        # ---- Date Filter ----
+        start_date = request.GET.get('start_date')
+        end_date = request.GET.get('end_date')
+        if start_date == 'None':
+            start_date = None
+        if end_date == 'None':
+            end_date = None
 
-        if 'all_time_frames' not in request.GET:
-            startdate = "%s-%s-%s" % (request.GET.get('start_date_year'),
+        if 'all_time_frames' not in request.GET and 'page' not in request.GET:
+            start_date = "%s-%s-%s" % (request.GET.get('start_date_year'),
                                       request.GET.get('start_date_month'),
                                       request.GET.get('start_date_day'))
-            enddate = "%s-%s-%s" % (request.GET.get('end_date_year'),
+            end_date = "%s-%s-%s" % (request.GET.get('end_date_year'),
                                       request.GET.get('end_date_month'),
                                       request.GET.get('end_date_day'))
+        if start_date and end_date:
+            datefilter = Q(begin_date__range=(start_date,end_date)) | Q(end_date__range=(start_date,end_date))
+            results = MainDataEntry.objects.filter(datefilter).select_related().order_by('id')
+        else:
+            results = MainDataEntry.objects.select_related().order_by('id')
 
-
+        # ---- Source Filter
+        """
         if request.GET.get('sourceinput'):
             sourceinput = request.GET.get('sourceinput')
         else:
             sourceinput = ""
+        """
 
-
+        # ---- Location Filter ----
         locations_list = []
-        results = []
-
-        if startdate:
-            datesourceresults = MainDataEntry.objects.filter(Q(begin_date__range=(startdate,enddate)) | Q(end_date__range=(startdate,enddate))).filter(Q(source__name__icontains=sourceinput)).select_related().order_by('id')
-        else:
-            datesourceresults = MainDataEntry.objects.filter(Q(source__name__icontains=sourceinput)).select_related().order_by('id')
-
+        location_results = []
+        search_locations = None
+        # TODO: Handle for locations *selected* in the form vs ones typed in the search box
         if request.GET.get('locations'):
-            searchlocations = request.GET.get('locations')
-            locations_list = searchlocations.split(", ")
-            for x in locations_list:
-                for y in datesourceresults.filter(location__name="%s"%x).select_related().order_by('id'):
-                    results.append(y)
-        else:
-            searchlocations=""
-            results = datesourceresults
+            search_locations = request.GET.get('locations')
+            locations_list = search_locations.split(",")
+            for loc in locations_list:
+                if len(loc.strip()) > 0:
+                    # Need to check this methodology with John/Karim
+                    locations = Location.objects.filter(full_name__contains=loc)
+                    for y in results.filter(location__in=locations).select_related().order_by('id'):
+                        location_results.append(y)
+            results = location_results
 
+        """
         # check if they want to limit by any of the other fields:
         if request.GET.getlist('continent')[0] != '':
             print "Limiting by continent"
@@ -96,15 +101,15 @@ def govtsearch(request):
         if request.GET.getlist('non_sovereign')[0] != '':
             print "Limiting by non_sveriegn"
             results = results.filter(location__location__pk__in=request.GET.getlist('non_sovereign'))
-
+        """
+    
         result_start_date = None
         result_end_date = None
 
-        result_start_date = results.order_by('begin_date')[0].begin_date
-        result_end_date = results.order_by('end_date')[0].begin_date
+        #result_start_date = results.order_by('begin_date')[0].begin_date
+        #result_end_date = results.order_by('end_date')[0].begin_date
 
         print result_start_date
-
 
         if 'export' in request.GET:
             if request.GET.get('export') == 'CSV':
@@ -119,8 +124,6 @@ def govtsearch(request):
 
                 return response
 
-
-
         paginator = Paginator(results,20)
         try:
             page = request.GET.get('page','1')
@@ -131,16 +134,15 @@ def govtsearch(request):
         except (EmptyPage, InvalidPage):
             results = paginator.page(paginator.num_pages)
 
-
         return render_to_response("government_search_results.html",
             {
                 "result_start_date": result_start_date,
                 "result_end_date": result_end_date,
                 "locations_list":locations_list,
-                "searchlocations":searchlocations,
-                "startdate":startdate,
-                "enddate":enddate,
-                "sourceinput":sourceinput,
+                "search_locations":search_locations,
+                "start_date":start_date,
+                "end_date":end_date,
+                #"source_input":source_input,
                 "results":results,
                 "search":search,
                 "form": form,
@@ -177,101 +179,3 @@ def govtsearch(request):
             "search":search,
             "form": form,
         },context_instance=RequestContext(request))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""
-
-    locations_list = []
-    #for x in MainDataEntry.objects.select_related():
-    #    if not x.location.location.name in locations_list:
-    #        locations_list.append(str(x.location.location.name))
-    if request.GET.get('datesearch'):
-        datesearch = request.GET.get('datesearch')
-        startdate = request.GET.get('startdate')
-        enddate = request.GET.get('enddate')
-        qset = (Q(begin_date__range=(startdate,enddate)) | Q(end_date__range=(startdate,enddate)))
-        dateresults = MainDataEntry.objects.filter(qset).select_related().order_by('id')
-        paginator = Paginator(dateresults,1)
-        try:
-            page = int(request.GET.get('page',1))
-        except ValueError:
-            page = 1
-        try:
-            dateresults = paginator.page(page)
-        except (EmptyPage, InvalidPage):
-            dateresults = paginator.page(paginator.num_pages)
-    else:
-        datesearch = ""
-        startdate = ""
-        enddate = ""
-        dateresults = []
-    if request.GET.get('locationsearch'):
-        locationsearch = request.GET.get('locationsearch')
-        searchlocations = request.GET.get("locations")
-        if searchlocations:
-            loclist = searchlocations.split(", ")
-            qs = ""
-            locresults = []
-            for x in loclist:
-                locresults += MainDataEntry.objects.filter(Q(location__name="%s" % x)).select_related().order_by('id')
-            paginator = Paginator(locresults,1)
-            try:
-                page = request.GET.get('page','1')
-            except ValueError:
-                page = '1'
-            try:
-                locresults = paginator.page(page)
-            except (EmptyPage, InvalidPage):
-                locresults = paginator.page(paginator.num_pages)
-    else:
-        searchlocations = ""
-        locationsearch = ""
-        locresults = []
-    if request.GET.get('sourcesearch'):
-        sourcesearch = request.GET.get('sourcesearch')
-        sourceinput = request.GET.get('sourceinput')
-        sourceresults = MainDataEntry.objects.select_related().filter(Q(source__name__icontains=sourceinput)).order_by('id')
-        paginator = Paginator(sourceresults,1)
-        try:
-            page = request.GET.get('page','1')
-        except ValueError:
-            page = '1'
-        try:
-            sourceresults = paginator.page(page)
-        except (EmptyPage, InvalidPage):
-            sourceresults = paginator.page(paginator.num_pages)
-    else:
-        sourcesearch = ""
-        sourceinput = ""
-        sourceresults = []
-
-    return render_to_response("government.html",{"locations_list":locations_list,"searchlocations":searchlocations,"locresults":locresults,"locationsearch":locationsearch,"datesearch":datesearch,"startdate":startdate,"enddate":enddate,"dateresults":dateresults,"sourcesearch":sourcesearch,"sourceinput":sourceinput,"sourceresults":sourceresults})
-"""

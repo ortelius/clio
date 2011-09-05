@@ -1,5 +1,5 @@
-<html>
-<head>
+{% extends 'base.html' %}
+{% block extra_head %}
     <script type="text/javascript" src=" https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
     <script>
         $(document).ready(function(){
@@ -8,12 +8,18 @@
             });
         });
     </script>
+{% endblock %}
 
+{% block feature %}
+<div id="feature" style='height:40px;'>
+    <div id="feature-content">
+        <h1>Politic Search Results - Dataset: {{ dataset }}</h1>
+    </div>
+</div>
+{% endblock %}
 
-</head>
-
-<body>
-<h1>Politic Search Results - Dataset: {{ dataset }}</h1>
+{% block extra-content %}
+<div id='extra-content'>
 {% ifnotequal paginator.count 0 %}
     <div>
         <table>
@@ -138,7 +144,7 @@
     </tr>
 {% for data in results.object_list %}
     <tr style="border: solid 1px #DDD;">
-        <td style="border: solid 1px #DDD;"><a href="../sourceinfo?source='{{ data.source.name }}'">{{ data.source.name }}</a></td>
+        <td style="border: solid 1px #DDD;"><a href="/sourceinfo?source={{ data.source.id }}">{{ data.source.name }}</a></td>
         {% if show_remarks %}
             <td style="border: solid 1px #DDD;">{{ data.remark }}</td>
         {% endif %}
@@ -229,17 +235,17 @@
 </div>
 <div class="pagination">
     <span class="step-links">
-        <span><a href="?search={{ search }}&page=1&startdate={{ startdate }}&enddate={{ enddate }}&locations={{ searchlocations }}&sourceinput={{ sourceinput }}">first&nbsp;&nbsp;</a></span>
+        <span><a href="?search={{ search }}&page=1&start_date={{ start_date }}&end_date={{ end_date }}&locations={{ search_locations }}&source_input={{ source_input }}">first&nbsp;&nbsp;</a></span>
         {% if results.has_previous %}
-            <a href="?search={{ search }}&page={{ results.previous_page_number }}&startdate={{ startdate }}&enddate={{ enddate }}&locations={{ searchlocations }}&sourceinput={{ sourceinput }}"><span class="pagination-text-right">previous</span></a>
+            <a href="?search={{ search }}&page={{ results.previous_page_number }}&start_date={{ start_date }}&end_date={{ end_date }}&locations={{ search_locations }}&source_input={{ source_input }}"><span class="pagination-text-right">previous</span></a>
         {% endif %}
     <span class="current">
             Page {{ results.number }} of {{ results.paginator.num_pages }}.
     </span>
         {% if results.has_next %}
-                <a href="?search={{ search }}&page={{ results.next_page_number }}&startdate={{ startdate }}&enddate={{ enddate }}&locations={{ searchlocations }}&sourceinput={{ sourceinput }}"><span class="pagination-text-left">next</span></a>
+                <a href="?search={{ search }}&page={{ results.next_page_number }}&start_date={{ start_date }}&end_date={{ end_date }}&locations={{ search_locations }}&source_input={{ source_input }}"><span class="pagination-text-left">next</span></a>
         {% endif %}
-        <span><a href="?search={{ search }}&page={{ results.paginator.num_pages }}&startdate={{ startdate }}&enddate={{ enddate }}&locations={{ searchlocations }}&sourceinput={{ sourceinput }}">&nbsp;&nbsp;last</a></span>
+        <span><a href="?search={{ search }}&page={{ results.paginator.num_pages }}&start_date={{ start_date }}&end_date={{ end_date }}&locations={{ search_locations }}&source_input={{ source_input }}">&nbsp;&nbsp;last</a></span>
     </span>
 </div>
 {% else %}
@@ -253,5 +259,4 @@
         {{ form  }}
     </form>
 </div>
-</body>
-</html>
+{% endblock %}

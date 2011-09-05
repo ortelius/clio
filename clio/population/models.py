@@ -59,8 +59,3 @@ class MainDataEntry(BaseDataEntry):
 
     if self.population_condition and not self.population_condition.active:
       self.population_condition.activate()
-
-
-
-
-  
