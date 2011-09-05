@@ -1,8 +1,9 @@
 from django import forms
+from clio.common.forms import GeneralSearchForm
 
 import models
 
-class MainPopulationQueryForm(forms.Form):
+class MainPopulationQueryForm(GeneralSearchForm):
   location = forms.ModelMultipleChoiceField(queryset = models.Location.objects, required = False, label = 'Location')
   begin_date = forms.DateField(required = False, label = "From Date")
   end_date = forms.DateField(required = False, label = "To Date")

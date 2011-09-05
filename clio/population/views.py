@@ -1,21 +1,17 @@
 from django.shortcuts import render_to_response
-from population.models import PopulationCondition, Occupation, MainDataEntry 
 from django.db.models import Q
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 from django.http import *
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.utils.encoding import smart_str, smart_unicode
-
-# Imports for the Ajax calls and the Jquery autocomplete plugin
 from django.http import HttpResponse
 from django.utils import simplejson
+from django.utils.encoding import smart_str, smart_unicode
 from django.template import RequestContext
 
-from government.forms import GovernmentSearchForm
-from django.contrib.auth.decorators import login_required
-
-# Imports to aid in unicode string handling
-from django.utils.encoding import smart_str, smart_unicode
+from clio.common.models import Location 
+from clio.population.forms import MainPopulationQueryForm 
+from clio.population.models import PopulationCondition, Occupation, MainDataEntry 
 
 
 # Ajax call from template picks up matching locations with this function
@@ -37,7 +33,7 @@ def locationlookup(request):
 @login_required
 def popsearch(request):
     if request.GET.get('search'):
-        form = GovernmentSearchForm(request.GET)
+        form = MainPopulationQueryForm(request.GET)
         search = request.GET.get('search')
 
         # ---- Date Filter ----
@@ -99,14 +95,16 @@ def popsearch(request):
         locations_list = []
         location_results = []
         search_locations = None
-        # TODO: Does not handle for locations *selected* in the form vs ones typed in the search box
+        # TODO: Handle for locations *selected* in the form vs ones typed in the search box
         if request.GET.get('locations'):
             search_locations = request.GET.get('locations')
-            locations_list = search_locations.split(", ")
-            # Need to look up by the locations ID, rather than string matching
-            for x in locations_list:
-                for y in results.filter(location__name="%s"%x).select_related().order_by('id'):
-                    location_results.append(y)
+            locations_list = search_locations.split(",")
+            for loc in locations_list:
+                if len(loc.strip()) > 0:
+                    # Need to check this methodology with John/Karim
+                    locations = Location.objects.filter(full_name__contains=loc)
+                    for y in results.filter(location__in=locations).select_related().order_by('id'):
+                        location_results.append(y)
             results = location_results
 
         # Setup the Paginator 
@@ -133,7 +131,7 @@ def popsearch(request):
                 "paginator": paginator,
             },context_instance=RequestContext(request))
     else:
-        form = GovernmentSearchForm()
+        form = MainPopulationQueryForm() 
         results = []
         locations_list = []
         searchlocations = ""

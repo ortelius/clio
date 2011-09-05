@@ -1,8 +1,27 @@
-<html>
-<head>
-<body>
-<h1>Economic Search Results</h1>
-<p><a href="{% url economics %}">Back to Search</a></p>
+{% extends 'base.html' %}
+{% block extra_head %}
+    <script type="text/javascript" src=" https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#id_export_as_csv').click(function () {
+                $("#id_form_export_csv").submit();
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block feature %}
+<div id="feature" style='height:60px;'>
+    <div id="feature-content">
+        <h1>Economic Search Results</h1>
+        <p><a href="{% url economics %}">Back to Search</a></p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra-content %}
+<div id='extra-content'>
+
 <table style="border: solid 1px #DDD;">
     <tr style="border: solid 1px #DDD;">
         <td nowwrap style="border: solid 1px #DDD;">ID</td>
@@ -41,5 +60,4 @@
     </span>
     There are a total of {{ paginator.count }} records matching your query.
 </div>
-</body>
-</html>
+{% endblock %}

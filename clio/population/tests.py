@@ -1,23 +1,40 @@
-"""
-This file demonstrates two different styles of tests (one doctest and one
-unittest). These will both pass when you run "manage.py test".
-
-Replace these with more appropriate tests for your application.
-"""
-
 from django.test import TestCase
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
+class PopulationTest(TestCase):
+
+    # Date Tests
+    def test_empty_dates(self):
         """
-        Tests that 1 + 1 always equals 2.
+        Tests that the search form *and* pagination works if no dates are specified 
         """
-        self.failUnlessEqual(1 + 1, 2)
+        pass
 
-__test__ = {"doctest": """
-Another way to test that 1 + 1 is equal to 2.
+    def test_after_date(self):
+        """
+        Tests that the search form *and* pagination works if only a start date is specified.
+        Results should be strictly _after_ the specified start date
+        """
+        pass
+        
+    def test_before_date(self):
+        """
+        Tests that the search form *and* pagination works if only an end date is specified.
+        Results should be strictly _before_ the specified end date
+        """
+        pass
 
->>> 1 + 1 == 2
-True
-"""}
+    def test_valid_dates(self):
+        """
+        Tests that the search form *and* pagination works if a valid date range is given. 
+        Results should be strictly _between_ the specified start and end dates.
+        """
+        pass
 
+    def test_invalid_dates(self):
+        """
+        Tests that the search form returns an appropriate error of an invalid date range is given 
+        """
+        pass
+
+    # Location Tests
+     

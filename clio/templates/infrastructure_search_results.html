@@ -1,8 +1,27 @@
-<html>
-<head>
-<body>
-<h1>Infrastructure Search Results</h1>
-<p><a href="{% url infrastructure %}">Back to Search</a></p>
+{% extends 'base.html' %}
+{% block extra_head %}
+    <script type="text/javascript" src=" https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#id_export_as_csv').click(function () {
+                $("#id_form_export_csv").submit();
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block feature %}
+<div id="feature" style='height:60px;'>
+    <div id="feature-content">
+        <h1>Infrastructure Search Results</h1>
+        <p><a href="{% url infrastructure %}">Back to Search</a></p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra-content %}
+<div id='extra-content'>
+
 <table style="border: solid 1px #DDD;">
     <tr style="border: solid 1px #DDD;">
         <td nowwrap style="border: solid 1px #DDD;">ID</td>
@@ -15,7 +34,7 @@
 {% for data in results.object_list %}
     <tr style="border: solid 1px #DDD;">
         <td style="border: solid 1px #DDD;">{{ data.id }}</td>
-        <td style="border: solid 1px #DDD;"><a href="../sourceinfo?source='{{ data.source }}'">{{ data.source }}</a></td>
+        <td style="border: solid 1px #DDD;"><a href="/sourceinfo?source={{ data.source.id }}">{{ data.source }}</a></td>
         <td style="border: solid 1px #DDD;">{{ data.begin_date }}</td>
         <td style="border: solid 1px #DDD;">{{ data.end_date }}</td>
         <td style="border: solid 1px #DDD;">{{ data.location }}</td>
@@ -41,5 +60,4 @@
     </span>
     There are a total of {{ paginator.count }} records matching your query.
 </div>
-</body>
-</html>
+{% endblock %}
