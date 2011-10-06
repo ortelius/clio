@@ -3,7 +3,7 @@ import os.path, sys, posixpath
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
-
+DEBUG=True
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -54,7 +54,7 @@ DATABASES = {
         'NAME': 'clio',                      # Or path to database file if using sqlite3.
         'USER': 'clio_admin',                      # Not used with sqlite3.
         'PASSWORD': '$3cr3t',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'HOST': '/tmp',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
@@ -182,6 +182,3 @@ try:
     from local_settings import *
 except ImportError:
     pass
-
-
-
