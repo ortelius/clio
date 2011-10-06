@@ -121,6 +121,7 @@
         {% endifequal %}
         {% ifequal dataset 'Military Personal' %}
             <td nowwrap style="border: solid 1px #DDD;">Military</td>
+            <td nowwrap style="border: solid 1px #DDD;">Value</td>
             <td nowwrap style="border: solid 1px #DDD;">Military Type</td>
         {% endifequal %}
         {% ifequal dataset 'European Officials' %}
@@ -235,17 +236,17 @@
 </div>
 <div class="pagination">
     <span class="step-links">
-        <span><a href="?search={{ search }}&page=1&start_date={{ start_date }}&end_date={{ end_date }}&locations={{ search_locations }}&source_input={{ source_input }}">first&nbsp;&nbsp;</a></span>
+        <span><a href="?search={{ search }}&page=1&dataset={{ dataset }}&start_date={{ start_date }}&end_date={{ end_date }}&locations={{ search_locations }}&source_input={{ source_input }}&continent={{ continent|default_if_none:"" }}&empire={{ empire|default_if_none:"" }}&nation_state={{ nation_state|default_if_none:"" }}&semi_sovereign={{ semi_sovereign|default_if_none:"" }}&non_sovereign={{ non_sovereign|default_if_none:"" }}">first&nbsp;&nbsp;</a></span>
         {% if results.has_previous %}
-            <a href="?search={{ search }}&page={{ results.previous_page_number }}&start_date={{ start_date }}&end_date={{ end_date }}&locations={{ search_locations }}&source_input={{ source_input }}"><span class="pagination-text-right">previous</span></a>
+            <a href="?search={{ search }}&page={{ results.previous_page_number }}&dataset={{ dataset }}&start_date={{ start_date }}&end_date={{ end_date }}&locations={{ search_locations }}&source_input={{ source_input }}&continent={{ continent|default_if_none:"" }}&empire={{ empire|default_if_none:"" }}&nation_state={{ nation_state|default_if_none:"" }}&semi_sovereign={{ semi_sovereign|default_if_none:"" }}&non_sovereign={{ non_sovereign|default_if_none:"" }}"><span class="pagination-text-right">previous</span></a>
         {% endif %}
     <span class="current">
             Page {{ results.number }} of {{ results.paginator.num_pages }}.
     </span>
         {% if results.has_next %}
-                <a href="?search={{ search }}&page={{ results.next_page_number }}&start_date={{ start_date }}&end_date={{ end_date }}&locations={{ search_locations }}&source_input={{ source_input }}"><span class="pagination-text-left">next</span></a>
+                <a href="?search={{ search }}&page={{ results.next_page_number }}&dataset={{ dataset }}&start_date={{ start_date }}&end_date={{ end_date }}&locations={{ search_locations }}&source_input={{ source_input }}&continent={{ continent|default_if_none:"" }}&empire={{ empire|default_if_none:"" }}&nation_state={{ nation_state|default_if_none:"" }}&semi_sovereign={{ semi_sovereign|default_if_none:"" }}&non_sovereign={{ non_sovereign|default_if_none:"" }}"><span class="pagination-text-left">next</span></a>
         {% endif %}
-        <span><a href="?search={{ search }}&page={{ results.paginator.num_pages }}&start_date={{ start_date }}&end_date={{ end_date }}&locations={{ search_locations }}&source_input={{ source_input }}">&nbsp;&nbsp;last</a></span>
+        <span><a href="?search={{ search }}&page={{ results.paginator.num_pages }}&dataset={{ dataset }}&start_date={{ start_date }}&end_date={{ end_date }}&locations={{ search_locations }}&source_input={{ source_input }}&continent={{ continent|default_if_none:"" }}&empire={{ empire|default_if_none:"" }}&nation_state={{ nation_state|default_if_none:"" }}&semi_sovereign={{ semi_sovereign|default_if_none:"" }}&non_sovereign={{ non_sovereign|default_if_none:"" }}">&nbsp;&nbsp;last</a></span>
     </span>
 </div>
 {% else %}

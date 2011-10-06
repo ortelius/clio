@@ -10,8 +10,8 @@ from django.utils.encoding import smart_str, smart_unicode
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 
-from government.models import *
-from government.forms import GovernmentSearchForm
+from clio.government.models import *
+from clio.government.forms import GovernmentSearchForm
 
 # Ajax call from template picks up matching locations with this function
 def locationlookup(request):
@@ -29,7 +29,6 @@ def locationlookup(request):
 # Search function for Government/Politics data
 @login_required
 def govtsearch(request):
-
     if request.GET.get('search'):
         form = GovernmentSearchForm(request.GET)
         search = request.GET.get('search')
@@ -55,19 +54,62 @@ def govtsearch(request):
         else:
             results = MainDataEntry.objects.select_related().order_by('id')
 
-        # ---- Source Filter
+        # Filter out empty values
+        if request.GET.get('dataset') == 'Government Revenue':
+            results = results.filter(revenue__isnull=False) 
+        elif request.GET.get('dataset') == 'Government Expenditure':
+            results = results.filter(expenditure__isnull=False) 
+        elif request.GET.get('dataset') == 'Public Debt':
+            results = results.filter(public_debt__isnull=False) 
+        elif request.GET.get('dataset') == 'Public Debt Interest Service':
+            results = results.filter(public_debt__isnull=False) 
+        elif request.GET.get('dataset') == 'Public Debt Virtual Service':
+            results = results.filter(public_debt__isnull=False)
+        elif request.GET.get('dataset') == 'Public Debt Serviced In Gold':
+            results = results.filter(public_debt__isnull=False)
+        elif request.GET.get('dataset') == 'Military Personal':
+            results = results.filter(military__isnull=False)
+        elif request.GET.get('dataset') == 'European Officials':
+            results = results.filter(officials__isnull=False)
+        elif request.GET.get('dataset') == 'Leaders':
+            results = results.filter(officials__isnull=False)
+
+        # **** Not Yet Implemented in the Form ****
         """
+        # ---- Source Filter
         if request.GET.get('sourceinput'):
             sourceinput = request.GET.get('sourceinput')
         else:
             sourceinput = ""
         """
 
+        # ---- Filter by Selected Values ----
+        if len(request.GET.getlist('continent')) > 0 and request.GET.getlist('continent')[0] != '':
+            print "Limiting by continent"
+            results = results.filter(location__location__geographically_in__name__in=request.GET.getlist('continent'))
+
+        if request.GET.get('empire') and request.GET.getlist('empire')[0] != '':
+            print "Limiting by empire"
+            results = results.filter(location__location__pk__in=request.GET.getlist('empire'))
+
+        if request.GET.get('nation_state') and request.GET.getlist('nation_state')[0] != '':
+            print "Limiting by nation_state"
+            print request.GET.getlist('nation_state')
+            results = results.filter(location__location__pk__in=request.GET.getlist('nation_state'))
+
+        if request.GET.get('semi_sovereign') and request.GET.getlist('semi_sovereign')[0] != '':
+            print "Limiting by semi_sveriegn"
+            results = results.filter(location__location__pk__in=request.GET.getlist('semi_sovereign'))
+
+        if request.GET.get('non_sovereign') and request.GET.getlist('non_sovereign')[0] != '':
+            print "Limiting by non_sveriegn"
+            results = results.filter(location__location__pk__in=request.GET.getlist('non_sovereign'))
+    
         # ---- Location Filter ----
         locations_list = []
         location_results = []
         search_locations = None
-        # TODO: Handle for locations *selected* in the form vs ones typed in the search box
+        
         locations = request.GET.get('locations')
         if locations == 'None':
             locations = None
@@ -82,37 +124,11 @@ def govtsearch(request):
                         location_results.append(y)
             results = location_results
 
-        """
-        # check if they want to limit by any of the other fields:
-        if request.GET.getlist('continent')[0] != '':
-            print "Limiting by continent"
-            results = results.filter(location__location__geographically_in__name__in=request.GET.getlist('continent'))
-
-        if request.GET.getlist('empire')[0] != '':
-            print "Limiting by empire"
-            results = results.filter(location__location__pk__in=request.GET.getlist('empire'))
-
-        if request.GET.getlist('nation_state')[0] != '':
-            print "Limiting by nation_state"
-            print request.GET.getlist('nation_state')
-            results = results.filter(location__location__pk__in=request.GET.getlist('nation_state'))
-
-        if request.GET.getlist('semi_sovereign')[0] != '':
-            print "Limiting by semi_sveriegn"
-            results = results.filter(location__location__pk__in=request.GET.getlist('semi_sovereign'))
-
-        if request.GET.getlist('non_sovereign')[0] != '':
-            print "Limiting by non_sveriegn"
-            results = results.filter(location__location__pk__in=request.GET.getlist('non_sovereign'))
-        """
-    
         result_start_date = None
         result_end_date = None
 
         #result_start_date = results.order_by('begin_date')[0].begin_date
         #result_end_date = results.order_by('end_date')[0].begin_date
-
-        print result_start_date
 
         if 'export' in request.GET:
             if request.GET.get('export') == 'CSV':
@@ -126,7 +142,7 @@ def govtsearch(request):
                     writer.writerow([result.pk, result.source, result.begin_date, result.end_date, result.location])
 
                 return response
-
+        # Setup the Paginator
         paginator = Paginator(results,20)
         try:
             page = request.GET.get('page','1')
@@ -139,38 +155,40 @@ def govtsearch(request):
 
         return render_to_response("government_search_results.html",
             {
-                "result_start_date": result_start_date,
-                "result_end_date": result_end_date,
                 "locations_list":locations_list,
                 "search_locations":search_locations,
                 "start_date":start_date,
                 "end_date":end_date,
+                "result_start_date": result_start_date,
+                "result_end_date": result_end_date,
                 #"source_input":source_input,
                 "results":results,
                 "search":search,
                 "form": form,
                 "paginator": paginator,
                 "dataset": request.GET.get('dataset'),
-                "show_continent": 'continent' in request.GET,
-                "show_remarks": 'remarks' in request.GET,
-                "show_confederation": 'confederation' in request.GET,
-                "show_country_codes": 'country_codes' in request.GET,
-                "show_placename": 'placename' in request.GET,
-                "show_alternate_placenames": 'alternate_placenames' in request.GET,
-                "show_uncertainty": 'uncertainty' in request.GET,
+                "continent": request.GET.get("continent"),
+                "empire": request.GET.get("empire"),
+                "nation_state": request.GET.get("nation_state"),
+                "semi_sovereign": request.GET.get("semi_sovereign"),
+                "non_sovereign": request.GET.get("non_sovereign"),
+                "show_continent": 'continent_chk' in request.GET,
+                "show_remarks": 'remarks_chk' in request.GET,
+                "show_confederation": 'confederation_chk' in request.GET,
+                "show_country_codes": 'country_codes_chk' in request.GET,
+                "show_placename": 'placename_chk' in request.GET,
+                "show_alternate_placenames": 'alternate_placenames_chk' in request.GET,
+                "show_uncertainty": 'uncertainty_chk' in request.GET,
             },context_instance=RequestContext(request))
-
     else:
         form = GovernmentSearchForm()
         results = []
         locations_list = []
-        searchlocations = ""
-        startdate = ""
-        enddate = ""
-        sourceinput = ""
+        search_locations = ""
+        start_date = ""
+        end_date = ""
+        source_input = ""
         search = ""
-
-
     return render_to_response("government.html",
         {
             "locations_list":locations_list,
